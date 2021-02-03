@@ -3,11 +3,11 @@ import React, { useContext, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { Grid } from "semantic-ui-react";
 import { LoadingComponent } from "../../../app/layout/LoadingComponent";
-import ActivityStore from "../../../app/stores/activityStore";
 import ActivityDetailHeader from "./ActivityDetailHeader";
 import { ActivityDetailedInfo } from "./ActivityDetailedInfo";
 import { ActivityDetailedChat } from "./ActivityDetailedChat";
 import { ActivityDetailedSidebar } from "./ActivityDetailedSidebar";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 interface DetailParams {
   id: string;
@@ -16,18 +16,16 @@ interface DetailParams {
 const ActivityDetails: React.FC<RouteComponentProps<DetailParams>> = ({
   match,
 }) => {
-  const activityStore = useContext(ActivityStore);
-  const { activity, loadActivity, loadingInitial } = activityStore;
+  const rootContext = useContext(RootStoreContext);
+  const { activity, loadActivity, loadingInitial } = rootContext.activityStore;
 
   useEffect(() => {
     loadActivity(match.params.id);
   }, [loadActivity, match.params.id]);
 
-  if (loadingInitial )
-    return <LoadingComponent content="Loading activity.." />;
+  if (loadingInitial) return <LoadingComponent content="Loading activity.." />;
 
-  if (!activity)
-    return <h2>Activity not found</h2>
+  if (!activity) return <h2>Activity not found</h2>;
   return (
     <Grid>
       <Grid.Column width={10}>
